@@ -3,49 +3,35 @@ import java.util.ArrayDeque;
 
 class Solution {
     public int solution(int n, int[][] computers) {
-        // 현재 나와 연결되어있는 노드 전부 탐색
-        // 그 다음에 연결되어있는 노드를 다시 add
-        // visited를 확인하면서 그 다음의 노드를 계속 add (반복)
-        // 자기 자신밖에 없을때
-
-        boolean[] nodes = new boolean[200];
-        boolean[][] visited = new boolean[n][n];
-        Queue<int[]> queue = new ArrayDeque();
         int answer = 0;
-        for (int i = 0; i < computers.length; i++) {
-            nodes[i] = true;
-            for (int j = 0; j < computers[i].length; j++) {
-                if (computers[i][j] == 1 && !visited[i][j] && !visited[j][i]) {
-                    // 방문 기록이 없으면 탐색리스트에 추가
-                    queue.add(new int[] {i, j});
-                }
-            }
+        boolean[] visited = new boolean[n]; // 노드 방문 여부
 
-            // 연결된 노드를 확인한다. 연결된 노드와 또 연결된 노드를 추가한다..
-            if (queue.isEmpty()) {
-                continue;
+        for (int i = 0; i < n; i++) {
+            // 아직 방문하지 않은 컴퓨터라면 새로운 네트워크의 시작점
+            if (!visited[i]) {
+                bfs(i, n, computers, visited);
+                answer++; // 네트워크 개수 증가
             }
-
-            while (!queue.isEmpty()) {
-                int[] v = queue.poll();
-                int current = v[0];
-                int next = v[1];
-                visited[current][next] = true;
-
-                if (!nodes[next]) {
-                    nodes[next] = true;
-                    for (int k = 0; k < computers[next].length; k++) {
-                        if (computers[next][k] == 1 && !visited[next][k] && !visited[k][next]) {
-                            queue.add(new int[] {next, k});
-                        }
-                    }
-                }
-            }
-            answer++;
         }
 
-        // System.out.println(answer);
-
         return answer;
+    }
+
+    private void bfs(int start, int n, int[][] computers, boolean[] visited) {
+        Queue<Integer> queue = new ArrayDeque<>();
+        queue.offer(start);
+        visited[start] = true;  // 현재 노드 방문
+
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+
+            for (int next = 0; next < n; next++) {
+                // 연결되어 있고, 아직 방문하지 않은 컴퓨터라면
+                if (computers[current][next] == 1 && !visited[next]) {
+                    visited[next] = true;
+                    queue.offer(next);
+                }
+            }
+        }
     }
 }
