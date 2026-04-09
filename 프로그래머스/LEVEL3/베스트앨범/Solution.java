@@ -1,6 +1,16 @@
 import java.util.*;
 
 class Solution {
+    static class Song {
+        int id;
+        int play;
+
+        Song(int id, int play) {
+            this.id = id;
+            this.play = play;
+        }
+    }
+
     public int[] solution(String[] genres, int[] plays) {
         Map<String, Integer> genreTotal = new HashMap<>();
         Map<String, List<Song>> genreSongs = new HashMap<>();
@@ -35,15 +45,5 @@ class Solution {
         }
 
         return result.stream().mapToInt(i -> i).toArray();
-    }
-}
-
-class Song {
-    int id;
-    int play;
-
-    Song(int id, int play) {
-        this.id = id;
-        this.play = play;
     }
 }
